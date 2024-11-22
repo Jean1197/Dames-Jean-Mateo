@@ -1,7 +1,7 @@
 '''
 Nom    : Jeu_des_Dames.py
 Auteur : Jean-Christophe Serrano
-Date   : 08.11.2024
+Date   : 22.11.2024
 '''
 
 import pygame
