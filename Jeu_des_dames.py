@@ -51,23 +51,24 @@ pion_pos = 0
 
 plateau = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
 
+nb_lignes = len(plateau)
 nb_colonnes = len(plateau)
 
 pygame.init()
 
 screen = pygame.display.set_mode((500,500))
 
-pygame.draw.rect(screen, (0,0,0),(50, 50, 0, 50),0)
-
 pygame.display.set_caption("MA-24 : Bases de pygame")
 
 screen.fill((20, 152, 255))
 
-BLACK = (0,0,0)
-WHITE = (255,255,255)
+for i in range(nb_lignes):
+    for n in range(nb_colonnes):
+        x = i * case_size
+        y = n * case_size
+        dessine_case(i+n)
 
-for i in range(nb_colonnes):
-    dessine_case(i)
+
 
 running = True
 
