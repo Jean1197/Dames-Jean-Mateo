@@ -4,6 +4,7 @@ Auteur : Jean-Christophe Serrano
 Date   : 22.11.2024
 '''
 
+#pygame à installer sur les deux postes
 import pygame
 import sys
 
