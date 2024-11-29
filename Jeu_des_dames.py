@@ -46,11 +46,22 @@ def bouge_bas_gauche():
         pion_col -= 1
         pion_ligne += 1
 
+def bouge_haut_droite():
+    global pion_col1, pion_ligne1
+    if pion_col1 < nb_colonnes - 1 and pion_ligne1 > 0:  # Haut-droite
+        pion_col1 += 1
+        pion_ligne1 -= 1
+
+def bouge_haut_gauche():
+    global pion_col1, pion_ligne1
+    if pion_col1 > 0 and pion_ligne1 > 0:  # Haut-gaucheq
+        pion_col1 -= 1
+        pion_ligne1 -= 1
 
 # Paramètres du plateau et des cases
 case_size = 50
-cases_blanches = (255, 255, 255)
-cases_noires = (0, 0, 0)
+cases_blanches = (200 , 173 , 127)
+cases_noires = (91 , 60 , 17)
 
 # Taille du plateau
 nb_lignes = 10
@@ -66,7 +77,7 @@ pion_col = 1
 pion_ligne = 0
 
 # Pion1 position horizontale
-pion_col1 = 1
+pion_col1 = 2
 
 # Pion1 position verticale
 pion_ligne1 = 9
@@ -78,11 +89,11 @@ screen = pygame.display.set_mode((nb_colonnes * case_size, nb_lignes * case_size
 pygame.display.set_caption("Jeu de dames")
 
 # Charger l'image du pion
-pion = pygame.image.load("MA-24_pion.png")
+pion = pygame.image.load("MA-24_pion_noir.png")
 pion = pygame.transform.scale(pion, (case_size, case_size))
 
 # Charger l'image du pion1
-pion1 = pygame.image.load("MA-24_pion_noir.png")
+pion1 = pygame.image.load("MA-24_pion.png")
 pion1 = pygame.transform.scale(pion1, (case_size, case_size))
 
 # Boucle principale
@@ -110,6 +121,10 @@ while running:
                 bouge_bas_droite()
             elif event.key == pygame.K_LEFT:
                 bouge_bas_gauche()
+            if event.key == pygame.K_UP:
+                bouge_haut_droite()
+            elif event.key == pygame.K_DOWN:
+                bouge_haut_gauche()
             elif event.key == pygame.K_q:
                 running = False
 
