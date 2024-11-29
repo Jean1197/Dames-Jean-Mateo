@@ -60,10 +60,16 @@ nb_colonnes = 10
 pion_pos = 0
 
 # Pion position horizontale
-pion_col = 0
+pion_col = 1
 
 # Pion position verticale
 pion_ligne = 0
+
+# Pion1 position horizontale
+pion_col1 = 1
+
+# Pion1 position verticale
+pion_ligne1 = 9
 
 # Initialisation de pygame
 pygame.init()
@@ -75,6 +81,10 @@ pygame.display.set_caption("Jeu de dames")
 pion = pygame.image.load("MA-24_pion.png")
 pion = pygame.transform.scale(pion, (case_size, case_size))
 
+# Charger l'image du pion1
+pion1 = pygame.image.load("MA-24_pion_noir.png")
+pion1 = pygame.transform.scale(pion1, (case_size, case_size))
+
 # Boucle principale
 running = True
 while running:
@@ -85,6 +95,10 @@ while running:
     x_pion = pion_col * case_size
     y_pion = pion_ligne * case_size
     screen.blit(pion, (x_pion, y_pion))
+
+    x_pion1 = pion_col1 * case_size
+    y_pion1 = pion_ligne1 * case_size
+    screen.blit(pion1, (x_pion1, y_pion1))
 
 
 
