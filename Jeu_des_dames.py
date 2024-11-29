@@ -11,91 +11,97 @@ import sys
 from pygame import KEYDOWN
 
 
-def dessine_case(case_pos):
-    global screen, case_size, cases_blanches, cases_noires, marge_gauche, marge_haut
-    color = cases_blanches if case_pos % 2 == 0 else cases_noires
+def dessine_case(x, y, couleur):
+    global screen, case_size
     pygame.draw.rect(
         screen,
-        color,
-        (marge_gauche + case_pos * case_size, marge_haut, case_size, case_size))
+        couleur,
+        (x, y, case_size, case_size)
+    )
 
-def bouge_droite():
-    global pion_pos, nb_colonnes, marge_haut, marge_gauche, case_size
-    if pion_pos < nb_colonnes-1:
-        dessine_case(pion_pos)
-        pion_pos += 1
-        screen.blit(pion, (marge_gauche + case_size*pion_pos, marge_haut))
+# Fonction pour dessiner le damier
+def dessine_plateau():
+    global screen, nb_lignes, nb_colonnes, cases_blanches, cases_noires, case_size
+    for ligne in range(nb_lignes):
+        for colonne in range(nb_colonnes):
+            # Alterne les couleurs
+            if (ligne + colonne) % 2 == 0:
+                couleur = cases_blanches
+            else:
+                couleur = cases_noires
+            x = colonne * case_size
+            y = ligne * case_size
+            dessine_case(x, y, couleur)
 
-def bouge_gauche():
-    global pion_pos, nb_colonnes, marge_haut, marge_gauche, case_size
-    if pion_pos > 0:
-        dessine_case(pion_pos)
-        pion_pos -= 1
-        screen.blit(pion, (marge_gauche + case_size*pion_pos, marge_haut))
+# Fonction pour déplacer le pion vers la droite
+def bouge_bas_droite():
+    global pion_col, pion_ligne
+    if pion_col < nb_colonnes - 1 and pion_ligne < nb_lignes - 1:  # Bas-droite
+        pion_col += 1
+        pion_ligne += 1
 
-#MAIN
+def bouge_bas_gauche():
+    global pion_col, pion_ligne
+    if pion_col > 0 and pion_ligne < nb_lignes - 1:  # Bas-gauche
+        pion_col -= 1
+        pion_ligne += 1
 
+
+# Paramètres du plateau et des cases
 case_size = 50
 cases_blanches = (255, 255, 255)
 cases_noires = (0, 0, 0)
-pions_blancs = (255, 255, 255)
-pions_noirs = (0, 0, 0)
 
-# Marges autour du damier
-marge_gauche = 0
-marge_droite = 0
-marge_haut = 0
-marge_bas = 0
+# Taille du plateau
+nb_lignes = 10
+nb_colonnes = 10
 
+# Position initiale du pion
 pion_pos = 0
 
-plateau = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1]
+# Pion position horizontale
+pion_col = 0
 
-nb_lignes = len(plateau)
-nb_colonnes = len(plateau)
+# Pion position verticale
+pion_ligne = 0
 
+# Initialisation de pygame
 pygame.init()
 
-screen = pygame.display.set_mode((500,500))
+screen = pygame.display.set_mode((nb_colonnes * case_size, nb_lignes * case_size))
+pygame.display.set_caption("Jeu de dames")
 
-pygame.display.set_caption("MA-24 : Bases de pygame")
-
-screen.fill((20, 152, 255))
-
-for i in range(nb_lignes):
-    for n in range(nb_colonnes):
-        x = i * case_size
-        y = n * case_size
-        dessine_case(i+n)
-
-
-
-running = True
-
+# Charger l'image du pion
 pion = pygame.image.load("MA-24_pion.png")
 pion = pygame.transform.scale(pion, (case_size, case_size))
 
+# Boucle principale
 running = True
-
 while running:
+    # Dessiner le plateau
+    dessine_plateau()
+
+    # Afficher le pion
+    x_pion = pion_col * case_size
+    y_pion = pion_ligne * case_size
+    screen.blit(pion, (x_pion, y_pion))
+
+
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_RIGHT:
-                bouge_droite()
+                bouge_bas_droite()
             elif event.key == pygame.K_LEFT:
-                bouge_gauche()
+                bouge_bas_gauche()
             elif event.key == pygame.K_q:
                 running = False
-        pygame.display.update()
 
 
-
-    screen.blit(pion, (marge_gauche + case_size * pion_pos, marge_haut))
 
     pygame.display.flip()
 
 pygame.quit()
 sys.exit()
-
