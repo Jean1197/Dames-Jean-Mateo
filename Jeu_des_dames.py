@@ -128,8 +128,6 @@ while running:
             elif event.key == pygame.K_q:
                 running = False
 
-
-
     pygame.display.flip()
 
 pygame.quit()
