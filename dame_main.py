@@ -1,5 +1,5 @@
 '''
-Nom    : Jeu_des_Dames.py
+Nom    : dame_main.py
 Auteur : Jean-Christophe Serrano x Mateo Grgic
 Date   : 22.11.2024
 '''
@@ -7,6 +7,7 @@ Date   : 22.11.2024
 #pygame à installer sur les deux postes
 import pygame
 import sys
+import dame_gfx as gfx
 
 from pygame import KEYDOWN
 
