@@ -33,6 +33,7 @@ def dessine_plateau():
             y = ligne * case_size
             dessine_case(x, y, couleur)
 
+
 # Fonction pour déplacer le pion vers la droite
 def bouge_bas_droite():
     global pion_col, pion_ligne
@@ -95,6 +96,7 @@ pion = pygame.transform.scale(pion, (case_size, case_size))
 # Charger l'image du pion1
 pion1 = pygame.image.load("MA-24_pion.png")
 pion1 = pygame.transform.scale(pion1, (case_size, case_size))
+
 
 # Boucle principale
 running = True
