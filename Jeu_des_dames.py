@@ -1,6 +1,6 @@
 '''
 Nom    : Jeu_des_Dames.py
-Auteur : Jean-Christophe Serrano
+Auteur : Jean-Christophe Serrano x Mateo Grgic
 Date   : 22.11.2024
 '''
 
