@@ -5,30 +5,7 @@ Date   : 05.12.2024
 '''
 
 import pygame
-import sys
-
-def dessine_case(x, y, couleur):
-    global screen, case_size
-    pygame.draw.rect(
-        screen,
-        couleur,
-        (x, y, case_size, case_size)
-    )
-
-# Fonction pour dessiner le damier
-def dessine_plateau():
-    global screen, nb_lignes, nb_colonnes, cases_blanches, cases_noires, case_size
-    for ligne in range(nb_lignes):
-        for colonne in range(nb_colonnes):
-            # Alterne les couleurs
-            if (ligne + colonne) % 2 == 0:
-                couleur = cases_blanches
-            else:
-                couleur = cases_noires
-            x = colonne * case_size
-            y = ligne * case_size
-            dessine_case(x, y, couleur)
-
+import dame_gfx as gfx
 
 # Fonction pour déplacer le pion vers la droite
 def bouge_bas_droite():
@@ -51,12 +28,15 @@ def bouge_haut_droite():
 
 def bouge_haut_gauche():
     global pion_col1, pion_ligne1
-    if pion_col1 > 0 and pion_ligne1 > 0:  # Haut-gaucheq
+    if pion_col1 > 0 and pion_ligne1 > 0:  # Haut-gauche
         pion_col1 -= 1
         pion_ligne1 -= 1
 
 
- for event in pygame.event.get():
+# Boucle principale
+running = True
+while running:
+    for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
@@ -71,7 +51,21 @@ def bouge_haut_gauche():
             elif event.key == pygame.K_q:
                 running = False
 
- pygame.display.flip()
+# Taille du plateau
+nb_lignes = 10
+nb_colonnes = 10
 
-pygame.quit()
-sys.exit()
+# Position initiale du pion
+pion_pos = 0
+
+# Pion position horizontale
+pion_col = 1
+
+# Pion position verticale
+pion_ligne = 0
+
+# Pion1 position horizontale
+pion_col1 = 2
+
+# Pion1 position verticale
+pion_ligne1 = 9

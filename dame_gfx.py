@@ -5,8 +5,28 @@ Date   : 05.12.2024
 '''
 
 import pygame
-import sys
 import dame_rules as rules
+
+def dessine_case(x, y, couleur):
+    global screen, case_size
+    pygame.draw.rect(
+        screen,
+        couleur,
+        (x, y, case_size, case_size))
+
+# Fonction pour dessiner le damier
+def dessine_plateau():
+    global screen, nb_lignes, nb_colonnes, cases_blanches, cases_noires, case_size
+    for ligne in range(nb_lignes):
+        for colonne in range(nb_colonnes):
+            # Alterne les couleurs
+            if (ligne + colonne) % 2 == 0:
+                couleur = cases_blanches
+            else:
+                couleur = cases_noires
+            x = colonne * case_size
+            y = ligne * case_size
+            dessine_case(x, y, couleur)
 
 # Paramètres du plateau et des cases
 case_size = 50
@@ -46,7 +66,6 @@ pion = pygame.transform.scale(pion, (case_size, case_size))
 pion1 = pygame.image.load("MA-24_pion.png")
 pion1 = pygame.transform.scale(pion1, (case_size, case_size))
 
-
 # Boucle principale
 running = True
 while running:
@@ -62,8 +81,6 @@ while running:
     y_pion1 = pion_ligne1 * case_size
     screen.blit(pion1, (x_pion1, y_pion1))
 
-
-pygame.display.flip()
+    pygame.display.flip()
 
 pygame.quit()
-sys.exit()
