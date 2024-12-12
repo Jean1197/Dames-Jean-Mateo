@@ -52,8 +52,17 @@ pion_col1 = 2
 # Pion1 position verticale
 pion_ligne1 = 9
 
-# Initialisation de pygame
-pygame.init()
+# Dessiner le plateau
+dessine_plateau()
+
+# Afficher le pion
+x_pion = pion_col * case_size
+y_pion = pion_ligne * case_size
+screen.blit(pion, (x_pion, y_pion))
+
+x_pion1 = pion_col1 * case_size
+y_pion1 = pion_ligne1 * case_size
+screen.blit(pion1, (x_pion1, y_pion1))
 
 screen = pygame.display.set_mode((nb_colonnes * case_size, nb_lignes * case_size))
 pygame.display.set_caption("Jeu de dames")
@@ -66,20 +75,26 @@ pion = pygame.transform.scale(pion, (case_size, case_size))
 pion1 = pygame.image.load("MA-24_pion.png")
 pion1 = pygame.transform.scale(pion1, (case_size, case_size))
 
+# Initialisation de pygame
+pygame.init()
+
 # Boucle principale
 running = True
 while running:
-    # Dessiner le plateau
-    dessine_plateau()
-
-    # Afficher le pion
-    x_pion = pion_col * case_size
-    y_pion = pion_ligne * case_size
-    screen.blit(pion, (x_pion, y_pion))
-
-    x_pion1 = pion_col1 * case_size
-    y_pion1 = pion_ligne1 * case_size
-    screen.blit(pion1, (x_pion1, y_pion1))
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_RIGHT:
+                bouge_bas_droite()
+            elif event.key == pygame.K_LEFT:
+                bouge_bas_gauche()
+            if event.key == pygame.K_UP:
+                bouge_haut_droite()
+            elif event.key == pygame.K_DOWN:
+                bouge_haut_gauche()
+            elif event.key == pygame.K_q:
+                running = False
 
     pygame.display.flip()
 

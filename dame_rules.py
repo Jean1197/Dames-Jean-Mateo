@@ -5,7 +5,6 @@ Date   : 05.12.2024
 '''
 
 import pygame
-import dame_gfx as gfx
 
 # Fonction pour déplacer le pion vers la droite
 def bouge_bas_droite():
@@ -32,24 +31,7 @@ def bouge_haut_gauche():
         pion_col1 -= 1
         pion_ligne1 -= 1
 
-
-# Boucle principale
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                bouge_bas_droite()
-            elif event.key == pygame.K_LEFT:
-                bouge_bas_gauche()
-            if event.key == pygame.K_UP:
-                bouge_haut_droite()
-            elif event.key == pygame.K_DOWN:
-                bouge_haut_gauche()
-            elif event.key == pygame.K_q:
-                running = False
+pygame.init()
 
 # Taille du plateau
 nb_lignes = 10
@@ -69,3 +51,5 @@ pion_col1 = 2
 
 # Pion1 position verticale
 pion_ligne1 = 9
+
+pygame.quit()
