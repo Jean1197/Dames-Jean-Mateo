@@ -48,3 +48,5 @@ def afficher_pions(screen, pions, pion_image, case_size):
         x = colonne * case_size
         y = ligne * case_size
         screen.blit(pion_image, (x, y))
+
+pygame.init()
