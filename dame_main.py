@@ -10,8 +10,8 @@ from dame_gfx import dessine_plateau, charger_images, initialiser_pions, affiche
 
 # Paramètres du plateau
 case_size = 50
-cases_blanches = (200, 173, 127)
-cases_noires = (91, 60, 17)
+cases_blanches = (0,0,139)
+cases_noires = (255,0,0)
 nb_lignes, nb_colonnes = 10, 10
 
 # Initialisation de pygame

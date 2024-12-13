@@ -15,10 +15,10 @@ def dessine_plateau(screen, nb_lignes, nb_colonnes, case_size, cases_blanches, c
 
 def charger_images(case_size):
     """Charge et redimensionne les images des pions."""
-    pion_noir = pygame.image.load("real.png.png")
+    pion_noir = pygame.image.load("psg.png")
     pion_noir = pygame.transform.scale(pion_noir, (case_size, case_size))
 
-    pion_blanc = pygame.image.load("barca.png.png")
+    pion_blanc = pygame.image.load("barca.png")
     pion_blanc = pygame.transform.scale(pion_blanc, (case_size, case_size))
 
     return pion_noir, pion_blanc
@@ -29,13 +29,13 @@ def initialiser_pions(nb_lignes, nb_colonnes):
     pions_blancs = []
 
     # Ajouter les pions noirs dans les trois premières lignes sur les cases noires
-    for ligne in range(3):
+    for ligne in range(4):
         for colonne in range(nb_colonnes):
             if (ligne + colonne) % 2 == 1:  # Case noire
                 pions_noirs.append((ligne, colonne))
 
     # Ajouter les pions blancs dans les trois dernières lignes sur les cases noires
-    for ligne in range(nb_lignes - 3, nb_lignes):
+    for ligne in range(nb_lignes - 4, nb_lignes):
         for colonne in range(nb_colonnes):
             if (ligne + colonne) % 2 == 1:  # Case noire
                 pions_blancs.append((ligne, colonne))
