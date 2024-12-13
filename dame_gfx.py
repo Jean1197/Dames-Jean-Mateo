@@ -15,10 +15,10 @@ def dessine_plateau(screen, nb_lignes, nb_colonnes, case_size, cases_blanches, c
 
 def charger_images(case_size):
     """Charge et redimensionne les images des pions."""
-    pion_noir = pygame.image.load("MA-24_pion_noir.png")
+    pion_noir = pygame.image.load("real.png.png")
     pion_noir = pygame.transform.scale(pion_noir, (case_size, case_size))
 
-    pion_blanc = pygame.image.load("MA-24_pion.png")
+    pion_blanc = pygame.image.load("barca.png.png")
     pion_blanc = pygame.transform.scale(pion_blanc, (case_size, case_size))
 
     return pion_noir, pion_blanc
