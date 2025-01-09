@@ -31,32 +31,66 @@ def handle_events(game_state):
             if event.key == pygame.K_q:  # Vérifier si la touche 'Q' est pressée
                 return False
 
+
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:  # Clic gauche
+
             x, y = pygame.mouse.get_pos()
+
             colonne, ligne = x // 50, y // 50  # 50 est la taille de la case
 
             if game_state["pion_selectionne"]:
+
                 if (ligne, colonne) in game_state["mouvements_possibles"]:
+
                     pion_selectionne = game_state["pion_selectionne"]
+
                     if pion_selectionne in game_state["pions_noirs"]:
+
                         game_state["pions_noirs"].remove(pion_selectionne)
+
                         game_state["pions_noirs"].append((ligne, colonne))
+
                     elif pion_selectionne in game_state["pions_blancs"]:
+
                         game_state["pions_blancs"].remove(pion_selectionne)
+
                         game_state["pions_blancs"].append((ligne, colonne))
+
                     game_state["pion_selectionne"] = None
+
                     game_state["mouvements_possibles"] = []
 
+
             else:
+
+                mouvements = []
+
                 if (ligne, colonne) in game_state["pions_noirs"]:
-                    game_state["pion_selectionne"] = (ligne, colonne)
-                    game_state["mouvements_possibles"] = calculer_deplacements(
+
+                    mouvements = calculer_deplacements(
+
                         (ligne, colonne), game_state["pions_noirs"], game_state["pions_blancs"], "bas"
-                    )
-                elif (ligne, colonne) in game_state["pions_blancs"]:
-                    game_state["pion_selectionne"] = (ligne, colonne)
-                    game_state["mouvements_possibles"] = calculer_deplacements(
-                        (ligne, colonne), game_state["pions_blancs"], game_state["pions_noirs"], "haut"
+
                     )
 
+                    if mouvements:  # Seulement sélectionner le pion s'il a des mouvements possibles
+
+                        game_state["pion_selectionne"] = (ligne, colonne)
+
+                        game_state["mouvements_possibles"] = mouvements
+
+
+                elif (ligne, colonne) in game_state["pions_blancs"]:
+
+                    mouvements = calculer_deplacements(
+
+                        (ligne, colonne), game_state["pions_blancs"], game_state["pions_noirs"], "haut"
+
+                    )
+
+                    if mouvements:  # Seulement sélectionner le pion s'il a des mouvements possibles
+
+                        game_state["pion_selectionne"] = (ligne, colonne)
+
+                        game_state["mouvements_possibles"] = mouvements
     return True
