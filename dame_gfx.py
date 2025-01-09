@@ -12,6 +12,7 @@ nb_lignes, nb_colonnes = 10, 10
 cases_blanches = (0, 0, 139)
 cases_noires = (255, 0, 0)
 
+#dessine le tableau
 def dessine_plateau(screen):
     """Dessine le plateau de jeu avec alternance des couleurs."""
     for ligne in range(nb_lignes):
