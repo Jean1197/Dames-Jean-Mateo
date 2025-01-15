@@ -6,6 +6,8 @@ Date   : 05.12.2024
 
 import pygame
 
+case_size = 50
+marge = 50  # Taille de la marge en pixels
 nb_lignes, nb_colonnes = 10, 10
 
 def calculer_deplacements(pion, pions_amis, pions_adverses, direction):
@@ -34,7 +36,8 @@ def handle_events(game_state):
 
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x, y = pygame.mouse.get_pos()
-            colonne, ligne = x // 50, y // 50  # 50 est la taille de la case
+            colonne = (x - marge) // case_size
+            ligne = (y - marge) // case_size
 
             # Si un pion est déjà sélectionné
             if game_state["pion_selectionne"]:
@@ -53,6 +56,11 @@ def handle_events(game_state):
                         game_state["tour_actif"] = "noir"  # Passe au joueur noir
 
                     # Réinitialisez la sélection
+                    game_state["pion_selectionne"] = None
+                    game_state["mouvements_possibles"] = []
+
+                else:
+                    # Si la case cliquée n'est pas un mouvement valide, désélectionner le pion
                     game_state["pion_selectionne"] = None
                     game_state["mouvements_possibles"] = []
 
