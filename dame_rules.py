@@ -6,8 +6,8 @@ Date   : 05.12.2024
 
 import pygame
 
-case_size = 50
-marge = 50  # Taille de la marge en pixels
+case_size = 70
+marge = 70  # Taille de la marge en pixels
 nb_lignes, nb_colonnes = 10, 10
 
 def calculer_deplacements(pion, pions_amis, pions_adverses, direction):
@@ -16,8 +16,6 @@ def calculer_deplacements(pion, pions_amis, pions_adverses, direction):
     mouvements = []
     captures = []
     directions = [(1, -1), (1, 1)] if direction == "bas" else [(-1, -1), (-1, 1)]
-
-    print(f"Calcul des déplacements pour {pion}, direction: {direction}")  # Log de la direction et du pion
 
     for d_ligne, d_colonne in directions:
         # Déplacement simple
@@ -36,16 +34,8 @@ def calculer_deplacements(pion, pions_amis, pions_adverses, direction):
         ):
             captures.append((saut_ligne, saut_colonne))
 
-    # Si des captures sont disponibles, elles deviennent obligatoires
-    print(f"Mouvements possibles: {mouvements}, Captures possibles: {captures}")  # Log des résultats
     return captures if captures else mouvements
 
-def verifier_captures_obligatoires(pions_actifs, pions_adverses, direction):
-    """Vérifie si des captures sont obligatoires pour le joueur actif."""
-    for pion in pions_actifs:
-        if calculer_deplacements(pion, pions_actifs, pions_adverses, direction):
-            return True
-    return False
 
 def handle_events(game_state):
     """Gère les événements utilisateur et met à jour l'état du jeu."""
@@ -62,79 +52,63 @@ def handle_events(game_state):
             colonne = (x - marge) // case_size
             ligne = (y - marge) // case_size
 
-            print(f"Click détecté en ({ligne}, {colonne})")  # Log pour afficher où l'utilisateur clique
-
             # Si un pion est déjà sélectionné
             if game_state["pion_selectionne"]:
                 pion_selectionne = game_state["pion_selectionne"]
-                print(f"Pion sélectionné : {pion_selectionne}")  # Log de la sélection du pion
-
-                # Vérifiez si le mouvement est valide
                 if (ligne, colonne) in game_state["mouvements_possibles"]:
-                    print(f"Mouvement valide vers ({ligne}, {colonne})")  # Log de mouvement valide
-                    # Déplacez le pion et gérez les captures
-                    if pion_selectionne in game_state["pions_noirs"] and game_state["tour_actif"] == "PSG":
-                        # Déplacez le pion noir
-                        game_state["pions_noirs"].remove(pion_selectionne)
-                        game_state["pions_noirs"].append((ligne, colonne))
+                    # Récupération des pions actuels et adverses
+                    pions_actuels = game_state["pions_noirs"] if game_state["tour_actif"] == "Noir" else game_state[
+                        "pions_blancs"]
+                    pions_adverses = game_state["pions_blancs"] if game_state["tour_actif"] == "Noir" else game_state[
+                        "pions_noirs"]
 
-                        # Gérer les captures
-                        capturable = ((pion_selectionne[0] + ligne) // 2, (pion_selectionne[1] + colonne) // 2)
-                        if capturable in game_state["pions_blancs"]:
-                            print(f"Capture détectée sur {capturable}")  # Log de la capture
-                            game_state["pions_blancs"].remove(capturable)
+                    # Déplacement du pion
+                    pions_actuels.remove(pion_selectionne)
+                    pions_actuels.append((ligne, colonne))
 
-                        # Passe au tour suivant, peu importe s'il y a des captures
-                        game_state["tour_actif"] = "Barca"
-                        game_state["pion_selectionne"] = None
-                        game_state["mouvements_possibles"] = []
+                    # Vérifier si un pion a été capturé
+                    capturable = ((pion_selectionne[0] + ligne) // 2, (pion_selectionne[1] + colonne) // 2)
+                    capture_effectuee = capturable in pions_adverses
+                    if capture_effectuee:
+                        pions_adverses.remove(capturable)
 
-                    elif pion_selectionne in game_state["pions_blancs"] and game_state["tour_actif"] == "Barca":
-                        # Déplacez le pion blanc
-                        game_state["pions_blancs"].remove(pion_selectionne)
-                        game_state["pions_blancs"].append((ligne, colonne))
+                        # Vérifier si une autre capture est possible
+                        direction = "bas" if game_state["tour_actif"] == "Noir" else "haut"
+                        mouvements_suivants = calculer_deplacements((ligne, colonne), pions_actuels, pions_adverses,
+                                                                    direction)
 
-                        # Gérer les captures
-                        capturable = ((pion_selectionne[0] + ligne) // 2, (pion_selectionne[1] + colonne) // 2)
-                        if capturable in game_state["pions_noirs"]:
-                            print(f"Capture détectée sur {capturable}")  # Log de la capture
-                            game_state["pions_noirs"].remove(capturable)
+                        if mouvements_suivants and any(
+                                m in mouvements_suivants for m in game_state["mouvements_possibles"]):
+                            # S'il y a encore une capture possible, on reste sur le même tour
+                            game_state["pion_selectionne"] = (ligne, colonne)
+                            game_state["mouvements_possibles"] = mouvements_suivants
+                            return True  # Tour non fini
 
-                        # Passe au tour suivant, peu importe s'il y a des captures
-                        game_state["tour_actif"] = "PSG"
-                        game_state["pion_selectionne"] = None
-                        game_state["mouvements_possibles"] = []
+                    # Si pas de capture enchaînée possible, on change de joueur
+                    game_state["tour_actif"] = "Blanc" if game_state["tour_actif"] == "Noir" else "Noir"
+                    game_state["pion_selectionne"] = None
+                    game_state["mouvements_possibles"] = []
 
                 else:
-                    # Si le mouvement n'est pas valide, désélectionner le pion
-                    print("Mouvement invalide, désélection du pion.")
                     game_state["pion_selectionne"] = None
                     game_state["mouvements_possibles"] = []
 
             else:
-                # Sélectionnez un pion valide pour le joueur actif (PSG ou Barca)
-                if game_state["tour_actif"] == "PSG" and (ligne, colonne) in game_state["pions_noirs"]:
-                    game_state["pion_selectionne"] = (ligne, colonne)
-                    direction = "bas"  # Les noirs se déplacent vers le bas
-                    print(f"Pion sélectionné : {game_state['pion_selectionne']}")  # Log de la sélection
-                    game_state["mouvements_possibles"] = calculer_deplacements(
-                        (ligne, colonne),
-                        game_state["pions_noirs"],
-                        game_state["pions_blancs"],
-                        direction
-                    )
-                elif game_state["tour_actif"] == "Barca" and (ligne, colonne) in game_state["pions_blancs"]:
-                    game_state["pion_selectionne"] = (ligne, colonne)
-                    direction = "haut"  # Les blancs se déplacent vers le haut
-                    print(f"Pion sélectionné : {game_state['pion_selectionne']}")  # Log de la sélection
-                    game_state["mouvements_possibles"] = calculer_deplacements(
-                        (ligne, colonne),
-                        game_state["pions_blancs"],
-                        game_state["pions_noirs"],
-                        direction
-                    )
+                # Sélection d'un pion valide
+                pions_actuels = game_state["pions_noirs"] if game_state["tour_actif"] == "Noir" else game_state[
+                    "pions_blancs"]
+                pions_adverses = game_state["pions_blancs"] if game_state["tour_actif"] == "Noir" else game_state[
+                    "pions_noirs"]
+                direction = "bas" if game_state["tour_actif"] == "Noir" else "haut"
 
-    return True  # Retourner True tant que l'utilisateur ne ferme pas la fenêtre
+                if (ligne, colonne) in pions_actuels:
+                    mouvements = calculer_deplacements((ligne, colonne), pions_actuels, pions_adverses, direction)
+                    if mouvements:
+                        game_state["pion_selectionne"] = (ligne, colonne)
+                        game_state["mouvements_possibles"] = mouvements
+    return True
+
+
 
 
 

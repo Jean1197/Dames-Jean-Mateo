@@ -7,11 +7,11 @@ Date   : 05.12.2024
 import pygame
 
 # Paramètres globaux
-case_size = 50
+case_size = 70
 nb_lignes, nb_colonnes = 10, 10
-cases_blanches = (0, 0, 139)
-cases_noires = (255, 0, 0)
-marge = 50  # Taille de la marge en pixels
+cases_blanches = (255, 255, 255)
+cases_noires = (47,79,79)
+marge = 70  # Taille de la marge en pixels
 
 # Dessine le plateau
 def dessine_plateau(screen):
@@ -26,8 +26,8 @@ def dessine_plateau(screen):
 
 def charger_images():
     """Charge et redimensionne les images des pions."""
-    pion_noir = pygame.image.load("psg.png")
-    pion_blanc = pygame.image.load("barca.png")
+    pion_noir = pygame.image.load("MA-24_pion_noir.png")
+    pion_blanc = pygame.image.load("MA-24_pion.png")
     pion_noir = pygame.transform.scale(pion_noir, (case_size, case_size))
     pion_blanc = pygame.transform.scale(pion_blanc, (case_size, case_size))
     return pion_noir, pion_blanc
@@ -60,7 +60,7 @@ def init_graphics():
         "pions_blancs": pions_blancs,
         "pion_selectionne": None,
         "mouvements_possibles": [],
-        "tour_actif": "PSG"  # Noir commence
+        "tour_actif": "Noir"  # Noir commence
     }
     return screen, assets, game_state
 
@@ -71,8 +71,8 @@ def effacer_zone_texte(screen):
 def afficher_tour(screen, tour_actif):
     """Affiche le texte indiquant le tour actuel."""
     effacer_zone_texte(screen)  # Efface la zone précédente
-    font = pygame.font.Font(None, 36)
-    couleur = (255, 255, 255) if tour_actif == "PSG" else (255, 255, 255)  # Même couleur, mais vous pouvez choisir une couleur différente pour chaque équipe
+    font = pygame.font.Font(None, 50)
+    couleur = (255, 255, 255) if tour_actif == "Noir" else (255, 255, 255)  # Même couleur, mais vous pouvez choisir une couleur différente pour chaque équipe
     text = font.render(f"Tour : {tour_actif.capitalize()}", True, couleur)
     screen.blit(text, (10, 10))
 
