@@ -13,7 +13,7 @@ cases_blanches = (0, 0, 139)
 cases_noires = (255, 0, 0)
 marge = 50  # Taille de la marge en pixels
 
-#dessine le tableau
+# Dessine le plateau
 def dessine_plateau(screen):
     """Dessine le plateau de jeu avec alternance des couleurs et une marge."""
     for ligne in range(nb_lignes):
@@ -45,7 +45,6 @@ def afficher_pions(screen, pions, pion_image):
         y = ligne * case_size + marge
         screen.blit(pion_image, (x, y))
 
-
 def init_graphics():
     """Initialise les graphiques et retourne les objets nécessaires."""
     pygame.init()
@@ -61,19 +60,28 @@ def init_graphics():
         "pions_blancs": pions_blancs,
         "pion_selectionne": None,
         "mouvements_possibles": [],
-        "tour_actif": "noir"  # Le joueur noir commence
+        "tour_actif": "PSG"  # Noir commence
     }
     return screen, assets, game_state
 
+def effacer_zone_texte(screen):
+    """Efface une zone spécifique où le texte est affiché."""
+    pygame.draw.rect(screen, (0, 0, 0), (0, 0, screen.get_width(), 50))  # Efface le haut de l'écran
 
 def afficher_tour(screen, tour_actif):
+    """Affiche le texte indiquant le tour actuel."""
+    effacer_zone_texte(screen)  # Efface la zone précédente
     font = pygame.font.Font(None, 36)
-    text = font.render(f"Tour : {tour_actif.capitalize()}", True, (255, 255, 255))
+    couleur = (255, 255, 255) if tour_actif == "PSG" else (255, 255, 255)  # Même couleur, mais vous pouvez choisir une couleur différente pour chaque équipe
+    text = font.render(f"Tour : {tour_actif.capitalize()}", True, couleur)
     screen.blit(text, (10, 10))
-
 
 def update_graphics(screen, assets, game_state):
     """Met à jour l'écran avec les nouveaux graphismes."""
+    # Efface tout l'écran avant de redessiner
+    screen.fill((0, 0, 0))
+
+    # Dessine le plateau et les pions
     dessine_plateau(screen)
     afficher_pions(screen, game_state["pions_noirs"], assets["pion_noir"])
     afficher_pions(screen, game_state["pions_blancs"], assets["pion_blanc"])
@@ -82,12 +90,8 @@ def update_graphics(screen, assets, game_state):
     for ligne, colonne in game_state["mouvements_possibles"]:
         pygame.draw.rect(screen, (0, 255, 0), (colonne * case_size + marge, ligne * case_size + marge, case_size, case_size), 5)
 
-    # Affiche le tour si "tour_actif" existe
-    if "tour_actif" in game_state:
-        afficher_tour(screen, game_state["tour_actif"])
-    else:
-        print("Erreur : 'tour_actif' manquant dans game_state !")
+    # Affiche le tour actif
+    afficher_tour(screen, game_state["tour_actif"])
 
     # Met à jour l'affichage
     pygame.display.flip()
-
