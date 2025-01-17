@@ -8,8 +8,10 @@ import pygame
 from dame_gfx import init_graphics, update_graphics
 from dame_rules import handle_events
 
+# A l'aide de Chat GPT : lignes 13-28
+
 def main():
-        # Initialiser pygame et les graphiques
+        # Initialiser les graphiques
         screen, assets, game_state = init_graphics()
 
         # Boucle principale
