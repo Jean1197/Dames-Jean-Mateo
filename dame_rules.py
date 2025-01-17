@@ -66,7 +66,15 @@ def handle_events(game_state):
                     pions_actuels.remove(pion_selectionne)
                     pions_actuels.append((ligne, colonne))
 
-                    # Vérifier si un pion a été capturé
+                    # Vérification si le pion a atteint la dernière ligne (et devient une dame)
+                    if (game_state["tour_actif"] == "Noir" and ligne == nb_lignes - 1):
+                        pions_actuels.remove((ligne, colonne))
+                        pions_actuels.append((ligne, colonne, "noir"))  # Transforme en dame noire
+                    elif (game_state["tour_actif"] == "Blanc" and ligne == 0):
+                        pions_actuels.remove((ligne, colonne))
+                        pions_actuels.append((ligne, colonne, "blanc"))  # Transforme en dame blanche
+
+                    # Vérifier si une autre capture est possible
                     capturable = ((pion_selectionne[0] + ligne) // 2, (pion_selectionne[1] + colonne) // 2)
                     capture_effectuee = capturable in pions_adverses
                     if capture_effectuee:
@@ -107,7 +115,4 @@ def handle_events(game_state):
                         game_state["pion_selectionne"] = (ligne, colonne)
                         game_state["mouvements_possibles"] = mouvements
     return True
-
-
-
 

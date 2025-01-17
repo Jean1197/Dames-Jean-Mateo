@@ -25,12 +25,17 @@ def dessine_plateau(screen):
             pygame.draw.rect(screen, couleur, (x, y, case_size, case_size))
 
 def charger_images():
-    """Charge et redimensionne les images des pions."""
+    """Charge et redimensionne les images des pions et des dames."""
     pion_noir = pygame.image.load("MA-24_pion_noir.png")
     pion_blanc = pygame.image.load("MA-24_pion.png")
+    pion_dame_noir = pygame.image.load("MA-24_dame_noire.png")  # Image de la dame noire
+    pion_dame_blanc = pygame.image.load("MA-24_dame_blanche.png")  # Image de la dame blanche
     pion_noir = pygame.transform.scale(pion_noir, (case_size, case_size))
     pion_blanc = pygame.transform.scale(pion_blanc, (case_size, case_size))
-    return pion_noir, pion_blanc
+    pion_dame_noir = pygame.transform.scale(pion_dame_noir, (case_size, case_size))
+    pion_dame_blanc = pygame.transform.scale(pion_dame_blanc, (case_size, case_size))
+    return pion_noir, pion_blanc, pion_dame_noir, pion_dame_blanc
+
 
 def initialiser_pions():
     """Initialise les positions des pions noirs et blancs."""
@@ -38,23 +43,42 @@ def initialiser_pions():
     pions_blancs = [(ligne, colonne) for ligne in range(nb_lignes - 4, nb_lignes) for colonne in range(nb_colonnes) if (ligne + colonne) % 2 == 1]
     return pions_noirs, pions_blancs
 
-def afficher_pions(screen, pions, pion_image):
-    """Affiche les pions sur le plateau avec une marge."""
-    for ligne, colonne in pions:
-        x = colonne * case_size + marge
-        y = ligne * case_size + marge
-        screen.blit(pion_image, (x, y))
+def afficher_pions(screen, pions, assets, game_state):
+    """Affiche les pions et les dames sur le plateau."""
+    for piece in pions:
+        # Vérifie si c'est un pion (2 éléments) ou une dame (3 éléments)
+        if len(piece) == 2:  # Pion normal
+            ligne, colonne = piece
+            x = colonne * case_size + marge
+            y = ligne * case_size + marge
+            if piece in game_state["pions_noirs"]:  # Si c'est un pion noir
+                screen.blit(assets["pion_noir"], (x, y))
+            else:  # Si c'est un pion blanc
+                screen.blit(assets["pion_blanc"], (x, y))
+        elif len(piece) == 3:  # Dame (3 éléments : ligne, colonne, type)
+            ligne, colonne, type_dame = piece
+            x = colonne * case_size + marge
+            y = ligne * case_size + marge
+            if type_dame == "noir":  # Dame noire
+                screen.blit(assets["pion_dame_noir"], (x, y))
+            else:  # Dame blanche
+                screen.blit(assets["pion_dame_blanc"], (x, y))
+
 
 def init_graphics():
     """Initialise les graphiques et retourne les objets nécessaires."""
     pygame.init()
     screen = pygame.display.set_mode((nb_colonnes * case_size + 2 * marge, nb_lignes * case_size + 2 * marge))
     pygame.display.set_caption("Jeu de dames")
-    pion_noir, pion_blanc = charger_images()
-    pions_noirs, pions_blancs = initialiser_pions()
-    assets = {"pion_noir": pion_noir, "pion_blanc": pion_blanc}
+    pion_noir, pion_blanc, pion_dame_noir, pion_dame_blanc = charger_images()  # Récupérer toutes les images
+    assets = {
+        "pion_noir": pion_noir,
+        "pion_blanc": pion_blanc,
+        "pion_dame_noir": pion_dame_noir,
+        "pion_dame_blanc": pion_dame_blanc
+    }
 
-    # Initialisez correctement "tour_actif"
+    pions_noirs, pions_blancs = initialiser_pions()
     game_state = {
         "pions_noirs": pions_noirs,
         "pions_blancs": pions_blancs,
@@ -63,6 +87,7 @@ def init_graphics():
         "tour_actif": "Noir"  # Noir commence
     }
     return screen, assets, game_state
+
 
 def effacer_zone_texte(screen):
     """Efface une zone spécifique où le texte est affiché."""
@@ -83,8 +108,8 @@ def update_graphics(screen, assets, game_state):
 
     # Dessine le plateau et les pions
     dessine_plateau(screen)
-    afficher_pions(screen, game_state["pions_noirs"], assets["pion_noir"])
-    afficher_pions(screen, game_state["pions_blancs"], assets["pion_blanc"])
+    afficher_pions(screen, game_state["pions_noirs"], assets, game_state)
+    afficher_pions(screen, game_state["pions_blancs"], assets, game_state)
 
     # Dessine les mouvements possibles
     for ligne, colonne in game_state["mouvements_possibles"]:
